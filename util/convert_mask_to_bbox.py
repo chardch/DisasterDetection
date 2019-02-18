@@ -1,6 +1,27 @@
 import numpy as np
+import os
+import pickle
 from PIL import Image
 from skimage import measure
+from constants import bbox_split_dir, train_label_split_dir
+
+def convert_to_bboxes(in_path, out_path, mask):
+    try:
+        im = Image.open(in_path + '/' + mask)
+        print("Generating bounding box for %s" % (in_path + '/' + mask))
+        im_arr = np.array(im)
+        print(im_arr.shape)
+        bboxes = get_bboxes_center_width_height(im_arr)
+        outfile = out_path + '/' + mask.replace('.jpg','') + '_bbox'
+
+        if os.path.isfile(outfile):
+            print('outfile exists: ', outfile)
+            return
+        with open(outfile, 'wb') as f:
+            pickle.dump(bboxes, f)
+
+    except Exception as e: 
+        print("error: " + str(e))
 
 def get_bboxes_center_width_height(mask, connectivity = 1, pixel_threshold = 50):
     """
@@ -31,6 +52,8 @@ def convert_topleft_bottomright_to_center_hw(bbox, x_len, y_len, margin = 10):
     height = y_bottom - y_top
     return (center_x, center_y, width, height)
 
-
 if __name__ == '__main__':
-    
+    mask_names = os.listdir(train_label_split_dir)
+    for mask in mask_names:
+        convert_to_bboxes(train_label_split_dir, bbox_split_dir, mask)
+    print('done')
