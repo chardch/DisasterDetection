@@ -31,7 +31,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(epilog='')
     parser.add_argument('input_tiff', help="GeoTIFFs to tile, can be a single file or a directory.")
     parser.add_argument('output_dir', help="Output dir in which to save tiles. Must be different than input dir.")
-    parser.add_argument('tile_size', default=20000)
+    parser.add_argument('tile_size', default=2048)
 
     args = parser.parse_args()
     tiff = args.input_tiff
