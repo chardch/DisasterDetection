@@ -7,6 +7,8 @@ import numpy as np
 train_base = '/host/datasets/AIRS/trainval/train/'
 train_img_dir = train_base + 'image_jpg/all_classes'
 train_label_dir = train_base + 'label_jpg/all_classes'
+img_out_dir = train_base + 'image_jpg_split'
+label_out_dir = train_base + 'label_jpg_split'
 
 #length = 10240
 def partition_img(im, length=10240, nrows=4, ncols=4):
@@ -26,24 +28,24 @@ def partition_img(im, length=10240, nrows=4, ncols=4):
     return imgs
 
 def split_mask(file):
-    return split_arr(file, train_label_dir)
+    return split_arr(file, train_label_dir, label_out_dir)
 
 def split_img(file):
-    return split_arr(file, train_img_dir)
+    return split_arr(file, train_img_dir, img_out_dir)
 
-def split_arr(file, path):
+def split_arr(file, in_path, out_path):
     try:
-        im = Image.open(train_label_dir + '/' + file)
-        print("Generating jpeg for %s" % (train_label_dir + '/' + file))
-        #im.thumbnail(im.size)
-        #im.size = (10000, 10000)
+        im = Image.open(in_path + '/' + file)
+        print("Generating jpeg for %s" % (in_path + '/' + file))
         im_arr = np.array(im)
         print(im_arr.shape)
         im_parts = partition_img(im_arr)
-        print('hi')
         for i in range(len(im_parts)):
-            outfile = '/host/datasets/AIRS/train_jpg_split/label/' + file.replace('.jpg','') + '_' + str(i) + ".jpg"
-            print('outfile', outfile)
+            outfile = out_path + '/' + file.replace('.jpg','') + '_' + str(i) + ".jpg"
+            if os.path.isfile(outfile):
+                print('outfile exists: ', outfile)
+                continue 
+            print('outfile: ', outfile)
             img = Image.fromarray(im_parts[i])
             print("asdfasdfsadf")
             img.save(outfile, "JPEG", quality=100)
@@ -52,10 +54,14 @@ def split_arr(file, path):
 
 if __name__ == '__main__':
     image_names = os.listdir(train_img_dir)
-    with Pool(4) as p:
-        p.map(split_img, image_names)
+    threads = 6
+    for f in image_names:
+        split_img(f)
+    #with Pool(threads) as p:
+    #    images = p.map_async(split_img, image_names)
+    #    images.wait()
 
-#    with Pool(4) as p:
-#        p.map(split_mask, image_names)
+    #with Pool(threads) as p:
+    #    p.map(split_mask, image_names)
 
 print('done')
