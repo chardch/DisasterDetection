@@ -22,7 +22,7 @@ from keras.utils.data_utils import get_file
 # Number of image channels (for example 3 in case of RGB, or 1 for grayscale images)
 INPUT_CHANNELS = 3
 # Number of output masks (1 in case you predict only one type of objects)
-OUTPUT_MASK_CHANNELS = 10
+OUTPUT_MASK_CHANNELS = 1
 # Pretrained weights
 ZF_UNET_224_WEIGHT_PATH = 'https://github.com/ZFTurbo/ZF_UNET_224_Pretrained_Model/releases/download/v1.0/zf_unet_224.h5'
 
@@ -73,12 +73,12 @@ def double_conv_layer(x, size, dropout=0.0, batch_norm=True):
     return conv
 
 
-def ZF_UNET_224(dropout_val=0.2, weights=None):
+def ZF_UNET_224(img_x=224, img_y=224, dropout_val=0.2, weights=None):
     if K.image_dim_ordering() == 'th':
-        inputs = Input((INPUT_CHANNELS, 224, 224))
+        inputs = Input((INPUT_CHANNELS, img_x, img_y))
         axis = 1
     else:
-        inputs = Input((224, 224, INPUT_CHANNELS))
+        inputs = Input((img_x, img_y, INPUT_CHANNELS))
         axis = 3
     filters = 32
 
