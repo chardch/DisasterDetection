@@ -151,13 +151,13 @@ if __name__ == "__main__":
             
     bfull = bfull.reshape((hn*wn,num_preds,4))
 
-    '''
+
     #only display boxes with confidence > .5
     bs = bfull[scores > .5]
     cs = classes[scores>.5]
     s = args.input.split("/")[::-1]
     draw_bboxes(arr,bs,cs).save("p_bboxes/"+s[0].split(".")[0] + ".png")
-    '''
+
 
     with open(args.output,'w') as f:
         for i in range(bfull.shape[0]):
