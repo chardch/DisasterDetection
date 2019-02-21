@@ -11,7 +11,7 @@ def convert_to_bboxes(in_path, out_path, mask):
         print("Generating bounding box for %s" % (in_path + '/' + mask))
         im_arr = np.array(im)
         print(im_arr.shape)
-        bboxes = get_bboxes_center_width_height(im_arr)
+        bboxes = get_bboxes_wh(im_arr)
         outfile = out_path + '/' + mask.replace('.jpg','') + '_bbox'
 
         if os.path.isfile(outfile):
@@ -23,7 +23,17 @@ def convert_to_bboxes(in_path, out_path, mask):
     except Exception as e: 
         print("error: " + str(e))
 
-def get_bboxes_center_width_height(mask, connectivity = 1, pixel_threshold = 50):
+def get_bboxes_xy(mask, connectivity = 1, pixel_threshold = 50):
+    """
+    mask: 2-D array, representing pixels labelled as building = 255, otherwise = 0.
+    connectivity: 1 - only counts vertical and horizontal connections. 2 - also counts diagonals.
+    return: list of bounding boxes (with small margin) for each connected component in mask
+    in x_min, y_min, x_max, y_max format.
+    """
+    regions = get_regions(mask, connectivity)
+    return [region.bbox for region in regions if len(region.coords) > pixel_threshold]
+
+def get_bboxes_wh(mask, connectivity = 1, pixel_threshold = 50):
     """
     mask: 2-D array, representing pixels labelled as building = 255, otherwise = 0.
     connectivity: 1 - only counts vertical and horizontal connections. 2 - also counts diagonals.
