@@ -16,7 +16,10 @@ import io
 #import pandas as pd
 import tensorflow as tf
 import numpy as np
+import contextlib2
+import math
 
+from object_detection.dataset_tools import tf_record_creation_util
 from PIL import Image
 from object_detection.utils import dataset_util
 from collections import namedtuple, OrderedDict
@@ -69,7 +72,7 @@ def create_tf_example(filename, image_path, mask_path):
     classes = []
     # referenced from https://github.com/DIUx-xView/baseline/blob/master/xview_class_labels.txt
     class_name = 'Building'.encode('utf8')
-    class_num = 1
+    class_num = 73
     for bbox in bboxes:
         x_min, y_min, x_max, y_max = bbox
         xmins.append(x_min/width)
@@ -100,10 +103,32 @@ def main(_):
     image_dir = os.path.join(FLAGS.image_dir)
     masks_dir = os.path.join(FLAGS.mask_dir)
     mask_filenames = os.listdir(masks_dir)
-    for mask_fname in mask_filenames:
-        tf_example = create_tf_example(mask_fname, image_dir, masks_dir)
-        if tf_example is not None:
-            writer.write(tf_example.SerializeToString())
+    num_files = len(mask_filenames)
+    sharded = False
+    print(num_files)
+    if num_files > 150:
+        num_shards = math.ceil(num_files / 100) * 100
+        output_filebase = FLAGS.output_path + '/dataset.record'
+        print('output_filebase: ' + output_filebase)
+        sharded = True
+    if sharded:
+        with contextlib2.ExitStack() as tf_record_close_stack:
+            output_tfrecords = tf_record_creation_util.open_sharded_output_tfrecords(
+                tf_record_close_stack, output_filebase, num_shards)
+            for index, mask_fname in mask_filenames:
+                tf_example = create_tf_example(mask_fname, image_dir, masks_dir)
+                if tf_example is not None:
+                    output_shard_index = index % num_shards
+                    output_tfrecords[output_shard_index].write(tf_example.SerializeToString())
+            for index, example in examples:
+                tf_example = create_tf_example(example)
+                output_shard_index = index % num_shards
+                output_tfrecords[output_shard_index].write(tf_example.SerializeToString())
+    else:
+        for mask_fname in mask_filenames:
+            tf_example = create_tf_example(mask_fname, image_dir, masks_dir)
+            if tf_example is not None:
+                writer.write(tf_example.SerializeToString())
 
     writer.close()
     output_path = os.path.join(os.getcwd(), FLAGS.output_path)
