@@ -57,7 +57,7 @@ if __name__ == '__main__':
     threads = 6
     for f in image_names:
         #split_img(f)
-        split_mask(f.replace('.jpg', '_vis.jpg'))
+        split_mask(f)
     #with Pool(threads) as p:
     #    images = p.map_async(split_img, image_names)
     #    images.wait()

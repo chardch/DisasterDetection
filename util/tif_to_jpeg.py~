@@ -4,7 +4,7 @@ import os
 import sys
 from PIL import Image
 
-img_dir = '/host/datasets/AIRS/trainval/val/label'
+img_dir = '/host/datasets/AIRS/trainval/val/image'
 length = 10240 # determined to prevent error of tiles outside image
 print(img_dir)
 
@@ -15,7 +15,7 @@ for fname in os.listdir(img_dir):
             print("A jpeg file already exists for %s" % name)
             # If a jpeg is *NOT* present, create one from the tiff.
         else:
-            outfile = os.path.splitext(os.path.join(img_dir + '_jpg', fname))[0] + ".jpg"
+            outfile = os.path.splitext(os.path.join(img_dir + '_jpg_split', fname))[0] + ".jpg"
             print('outfile', outfile)
             try:
                 im = Image.open(os.path.join(img_dir, fname))

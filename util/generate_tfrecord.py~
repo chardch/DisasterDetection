@@ -69,7 +69,7 @@ def create_tf_example(filename, image_path, mask_path):
     classes = []
     # referenced from https://github.com/DIUx-xView/baseline/blob/master/xview_class_labels.txt
     class_name = 'Building'.encode('utf8')
-    class_num = 1
+    class_num = 73
     for bbox in bboxes:
         x_min, y_min, x_max, y_max = bbox
         xmins.append(x_min/width)
