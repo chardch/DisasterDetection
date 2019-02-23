@@ -20,7 +20,7 @@ import numpy as np
 from PIL import Image
 from object_detection.utils import dataset_util
 from collections import namedtuple, OrderedDict
-from convert_mask_to_bbox import get_bboxes_xy
+from convert_mask_to_bbox import get_bboxes_xy, get_bboxes_from_contours
 
 flags = tf.app.flags
 #flags.DEFINE_string('csv_input', '', 'Path to the CSV input')
@@ -50,14 +50,14 @@ def create_tf_example(filename, image_path, mask_path):
     try:
         im = Image.open(mask_path + '/' + filename)
 
-    except Exception as e: 
+    except Exception as e:
         print("error: " + str(e))
         return None
 
     print("Generating bounding box for %s" % (mask_path + '/' + filename))
     im_arr = np.array(im)
     height, width = im_arr.shape
-    bboxes = get_bboxes_xy(im_arr)
+    bboxes = get_bboxes_from_contours(im_arr) # (y_min, x_min, y_max, x_max)
 
     filename = filename.encode('utf8')
     image_format = b'jpg'
@@ -71,7 +71,8 @@ def create_tf_example(filename, image_path, mask_path):
     class_name = 'Building'.encode('utf8')
     class_num = 1
     for bbox in bboxes:
-        x_min, y_min, x_max, y_max = bbox
+        y_min, x_min, y_max, x_max = bbox
+        print('bbox: ', str(y_min/width), str(x_min/width), str(y_max/width), str(x_max/width))
         xmins.append(x_min/width)
         ymins.append(y_min/height)
         xmaxs.append(x_max/width)
