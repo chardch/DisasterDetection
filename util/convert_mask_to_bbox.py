@@ -11,7 +11,7 @@ def convert_to_bboxes(in_path, out_path, mask):
         print("Generating bounding box for %s" % (in_path + '/' + mask))
         im_arr = np.array(im)
         print(im_arr.shape)
-        bboxes = get_bboxes_wh(im_arr)
+        bboxes = get_bboxes_xy(im_arr)
         outfile = out_path + '/' + mask.replace('.jpg','') + '_bbox'
 
         if os.path.isfile(outfile):
@@ -23,6 +23,20 @@ def convert_to_bboxes(in_path, out_path, mask):
     except Exception as e: 
         print("error: " + str(e))
 
+
+def get_bboxes_from_contours(mask):
+    contours = measure.find_contours(mask, 0.8)
+    for contour in contours:
+        Xmin = np.min(contour[:,0])
+        Xmax = np.max(contour[:,0])
+        Ymin = np.min(contour[:,1])
+        Ymax = np.max(contour[:,1])
+    return [(np.min(contour[:,1]), # y_min
+             np.min(contour[:,0]), # x_min
+             np.max(contour[:,1]), # y_max
+             np.max(contour[:,0])) # x_max
+            for contour in contours]
+    #bounding_boxes.append([Xmin, Xmax, Ymin, Ymax])
 def get_bboxes_xy(mask, connectivity = 1, pixel_threshold = 50):
     """
     mask: 2-D array, representing pixels labelled as building = 255, otherwise = 0.

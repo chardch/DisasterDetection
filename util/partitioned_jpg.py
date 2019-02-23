@@ -56,7 +56,7 @@ if __name__ == '__main__':
     image_names = os.listdir(train_img_dir)
     threads = 6
     for f in image_names:
-        #split_img(f)
+        split_img(f)
         split_mask(f.replace('.jpg', '_vis.jpg'))
     #with Pool(threads) as p:
     #    images = p.map_async(split_img, image_names)
