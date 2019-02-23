@@ -1,11 +1,12 @@
 import numpy as np
 from PIL import Image
 from skimage import measure
+from convert_mask_to_bbox import get_bboxes_xy
 
 def get_crops_from_image_arr(image_arr, binary_mask):
     """Get crops of connected components, based on binary_mask, from image_arr."""
     crops = []
-    bboxes = get_bboxes(binary_mask)
+    bboxes = get_bboxes_xy(binary_mask)
     for row_start, col_start, row_end, col_end in bboxes:
         crop_arr = image_arr[row_start:row_end, col_start:col_end]
         crop = Image.fromarray(crop_arr)
