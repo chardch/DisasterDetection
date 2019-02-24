@@ -19,7 +19,7 @@ def convert_tif_to_jpg(img_dir, fname):
         print("Generating jpeg for %s" % fname)
         #im.thumbnail(im.size)
         im.size = (length, length)
-        im.save(outfile, "JPEG", quality=100)
+        im.save(outfile, "JPEG", quality=80)
       except Exception: 
         print(sys.exc_info()[0])
 
