@@ -4,11 +4,11 @@ from PIL import Image
 from multiprocessing import Pool
 import numpy as np
 
-train_base = '/host/datasets/AIRS/trainval/val/'
+train_base = '/host/datasets/AIRS/trainval/train/'
 train_img_dir = train_base + 'image_jpg'
 train_label_dir = train_base + 'label_jpg'
-img_out_dir = train_base + 'image_jpg_split'
-label_out_dir = train_base + 'label_jpg_split'
+img_out_dir = train_base + 'image_jpg_split_80'
+label_out_dir = train_base + 'label_jpg_split_80'
 
 #length = 10240
 def partition_img(im, length=10240, nrows=4, ncols=4):
@@ -48,7 +48,7 @@ def split_arr(file, in_path, out_path):
             print('outfile: ', outfile)
             img = Image.fromarray(im_parts[i])
             print("asdfasdfsadf")
-            img.save(outfile, "JPEG", quality=100)
+            img.save(outfile, "JPEG", quality=60)
     except Exception as e: 
         print("error: " + str(e))
 
