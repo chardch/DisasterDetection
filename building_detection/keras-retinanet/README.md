@@ -24,4 +24,4 @@ Full progression of training results are in train.log
 
 Sample output from earlier in the training process after about 7000 steps of training.
 
-![bounding box prediction](example_output/drawn_bboxes.png?raw=true "Predicted building bounding boxes")
+![bounding box prediction](example_output/drawn_bboxes.jpg?raw=true "Predicted building bounding boxes")
