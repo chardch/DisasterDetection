@@ -21,3 +21,7 @@ After 11500 steps of training:
 `324 instances of class building with average precision: 0.6715`
 
 Full progression of training results are in train.log
+
+Sample output from earlier in the training process after about 7000 steps of training.
+
+![bounding box prediction](example_output/drawn_bboxes.png?raw=true "Predicted building bounding boxes")
