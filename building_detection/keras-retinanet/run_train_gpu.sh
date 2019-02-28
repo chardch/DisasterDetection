@@ -1,0 +1,2 @@
+#!/bin/bash
+keras_retinanet/bin/train.py --gpu=0 --multi-gpu=1 --snapshot=/host/DisasterDetection/building_detection/keras-retinanet/snapshots/resnet50_csv_23.h5 --snapshot-path=./snapshot_gpu --workers=2 --backbone=resnet50 --image-min-side=480  --batch-size=16 --steps=500 --epochs=50 csv /host/datasets/AIRS/trainval/train/annotations_fixed.csv /host/datasets/AIRS/class_map.csv --val-annotations=/host/datasets/AIRS/trainval/val/annotations_fixed.csv

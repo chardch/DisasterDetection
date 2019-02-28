@@ -1,8 +1,0 @@
-#!/bin/bash
-
-TESTLIST="christchurch_518.tif christchurch_517.tif"
-
-for i in $TESTLIST; do
-    echo $i
-    python3 create_detections.py -c ../model/multires.pb -o 'preds_output/'$i'.txt' '/host/datasets/AIRS/trainval/train/image/'$i
-done

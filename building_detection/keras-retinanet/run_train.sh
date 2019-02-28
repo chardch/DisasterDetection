@@ -1,2 +1,1 @@
-#!/bin/bash
-keras_retinanet/bin/train.py --gpu=GPU-9e900557-a784-f3e0-7449-0dbd0f5b99e2 --backbone=resnet50 --image-min-side=400  --batch-size=8 --steps=100 --epochs=10 --tensorboard-dir=/host/DisasterDetection/building_detection/keras-retinanet/tfboard csv /host/datasets/AIRS/trainval/train/annotations_fixed.csv /host/datasets/AIRS/class_map.csv --val-annotations=/host/datasets/AIRS/trainval/val/annotations_fixed.csv
+/usr/bin/python3 keras_retinanet/bin/train.py --backbone=resnet50 --image-min-side=480 --batch-size=16 --steps=500 --epochs=300 csv /host/datasets/AIRS/trainval/train/annotations_fixed.csv /host/datasets/AIRS/class_map.csv --val-annotations=/host/datasets/AIRS/trainval/val/annotations_fixed_small.csv
