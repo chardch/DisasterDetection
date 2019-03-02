@@ -14,11 +14,12 @@ Due to limitations on the training speed when using many images, currently the v
 
 ## Evaluation Metrics
 
-After 11500 steps of training:
+After 20,500 steps of training:
+Test set metrics with 1504 images
 
-`loss: 0.6285 - regression_loss: 0.5577 - classification_loss: 0.0708`
+`26428 instances of class building with average precision: 0.7034`
 
-`324 instances of class building with average precision: 0.6715`
+`mAP: 0.7034`
 
 Full progression of training results are in train.log
 
