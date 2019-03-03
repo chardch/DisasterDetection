@@ -1,6 +1,0 @@
-train_base = '/host/DisasterDetection/datasets/AIRS/trainval/train/'
-train_img_dir = train_base + 'image_jpg/all_classes'
-train_label_dir = train_base + 'label_jpg/all_classes'
-train_img_split_dir = train_base + 'image_jpg_split'
-train_label_split_dir = train_base + 'label_jpg_split'
-bbox_out_dir = train_base + 'label_bbox_split'
