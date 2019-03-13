@@ -29,6 +29,7 @@ if __name__ == "__main__":
     input_dir = args.input_dir
 
     empty_rasters, ok_rasters = 0, 0
+    num_files = 0
     for filename in os.listdir(input_dir):
         f = input_dir + "/" + filename
         if f.endswith(".tif") and is_raster_empty(f):
@@ -37,6 +38,10 @@ if __name__ == "__main__":
         else:
             ok_rasters += 1
             continue
+
+        num_files += 1
+        if num_files % 1000 == 0:
+            print("Processed {} tiles...".format(str(num_files)))
 
     print ("Kept {} files".format(str(ok_rasters)))
     print("Deleted {} files".format(str(empty_rasters)))
