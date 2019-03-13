@@ -15,8 +15,11 @@ CRS = {'init':'epsg:4326'}
 tiles_preevent_1 = '/host/datasets/maria/pre_event/20161214-20161125/tiles/'
 tiles_preevent_2 = '/host/datasets/maria/pre_event/20170512-20170121/tiles/'
 tiles_preevent_3 = '/host/datasets/maria/pre_event/20161031-20161021/tiles/'
-tiles_noaa = '/host/datasets/maria/noaa/tiles/'
-building_gjson = '/host/datasets/maria/buildings.geojson'
+harvey_tiles_dir = '/host/datasets/harvey/'
+harvey_tiles_dirs = [harvey_tiles_dir + d for d in os.listdir(harvey_tiles_dir) if d.startswith('2017')]
+harvey_tiles = [f for f in os.listdir(d) for d in harvey_tiles_dirs]
+harvey_tiles = [d + '/' +  f for d in harvey_tiles_dirs for f in os.listdir(d)]
+building_gjson = '/host/datasets/harvey/boundingboxes-all-damagearea-pixelcoords.shp'
 
 def get_bounds(file_name, tiles_dir=None):
     if tiles_dir is not None:
@@ -37,9 +40,9 @@ def get_image_height_width(file_name):
     width, height = im.size
     return (height, width)
 
-tiles_to_use = tiles_noaa
-tile_names = [tiles_to_use + f for f in os.listdir(tiles_to_use) if f.endswith('tif')]
-df = pd.DataFrame(tile_names)
+#tiles_to_use = tiles_noaa
+#tile_names = [tiles_to_use + f for f in os.listdir(tiles_to_use) if f.endswith('tif')]
+df = pd.DataFrame(harvey_tiles)
 df.columns = ['file_name']
 
 df['bounds_lbrt'] = df['file_name'].apply(lambda x: get_bounds(x))
@@ -81,7 +84,7 @@ def min__(x, bound):
 def max__(x, bound):
     return max(x, bound)
 
-margin = 30
+margin = 20
 filtered = rejoined
   # min is actually the max and vice ver
 filtered['b_min_x'] = filtered['b_min_x'].apply(lambda x: max(x-margin,0))
@@ -94,7 +97,7 @@ filtered['b_min_y'] = filtered[['b_min_y', 'img_height']].apply(lambda x: min__(
 filtered = filtered[['file_name', 'b_min_x', 'b_min_y', 'b_max_x', 'b_max_y']]
 filtered['label'] = 'building'
 filtered = filtered[(filtered['b_max_x'] - filtered['b_min_x']) * (filtered['b_max_y'] - filtered['b_min_y']) >= 200]
-filtered.to_csv('/host/datasets/maria/noaa_annotations_margin.csv', header = False, index = False)
+filtered.to_csv('/host/datasets/harvey/harvey_annotations_margin.csv', header = False, index = False)
 # Possibly flatten the coordinates if the above isn't producing good results, since the earth is spherical, but don't foresee the issue since the tiles are so small that it's virtually linear
 # mercator_crs=3395
 # tiles_mercator = tiles_geo.to_crs(epsg=mercator_crs)
