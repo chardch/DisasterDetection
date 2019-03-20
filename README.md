@@ -1,4 +1,4 @@
-# DisasterDetection
+# DisasterNet: Automatic Disaster Detection from Aerial Imagery
 
 The process to coordinate rescue and relief efforts after a disaster is generally manual and time consuming. Manual inspection of aerial imagery is an improvement upon that, but is also slow and error-prone if the impacted area is expansive. We propose a two step Convolutional Neural Network (CNN) framework that identifies buildings in affected areas and determines whether or not they are likely to be damaged. This framework improves upon existing work by identifying damaged structures from raw aerial imagery without requiring heuristic based approaches for detection and combining that with building damage evaluation. We apply this to Hurricane Maria, which damaged or destroyed more than one third of the homes in Puerto Rico.
 
