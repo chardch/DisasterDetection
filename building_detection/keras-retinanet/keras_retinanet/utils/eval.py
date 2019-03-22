@@ -55,7 +55,7 @@ def _compute_ap(recall, precision):
     return ap
 
 
-def _get_detections(generator, model, score_threshold=0.05, max_detections=100, save_path=None):
+def _get_detections(generator, model, score_threshold=0.04, max_detections=800, save_path='./preds'):
     """ Get the detections from the model using the generator.
 
     The result is a list of lists such that the size is:
@@ -76,6 +76,7 @@ def _get_detections(generator, model, score_threshold=0.05, max_detections=100, 
         raw_image    = generator.load_image(i)
         image        = generator.preprocess_image(raw_image.copy())
         image, scale = generator.resize_image(image)
+        file_name = generator.image_path(i)
 
         if keras.backend.image_data_format() == 'channels_first':
             image = image.transpose((2, 0, 1))
@@ -105,7 +106,12 @@ def _get_detections(generator, model, score_threshold=0.05, max_detections=100, 
             draw_annotations(raw_image, generator.load_annotations(i), label_to_name=generator.label_to_name)
             draw_detections(raw_image, image_boxes, image_scores, image_labels, label_to_name=generator.label_to_name)
 
-            cv2.imwrite(os.path.join(save_path, '{}.png'.format(i)), raw_image)
+            #cv2.imwrite(os.path.join(save_path, '{}.png'.format(i)), raw_image)
+            with open(save_path + '.txt','w') as f:
+              for box in image_boxes:
+                if box is not None:
+                  box_str = str([format(x, '.8f') for x in box]).replace("'",'').replace('[','').replace(']','').replace(' ','')
+                  f.write(file_name + ',' + box_str + '\n')
 
         # copy detections to all_detections
         for label in range(generator.num_classes()):
@@ -147,10 +153,10 @@ def _get_annotations(generator):
 def evaluate(
     generator,
     model,
-    iou_threshold=0.5,
-    score_threshold=0.05,
-    max_detections=100,
-    save_path=None
+    iou_threshold=0.1,
+    score_threshold=0.04,
+    max_detections=800,
+    save_path='./preds'
 ):
     """ Evaluate a given dataset using a given model.
 

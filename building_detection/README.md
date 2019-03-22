@@ -1,8 +1,7 @@
 # Building detection model
 
-The implementation we are using is keras-retinanet
+The implementation we are using is keras-retinanet. The other zf_unet_model and object_detection_api contain experiments that we didn't end up using.
 
-# Bounding boxes
+# Goal
 
-annotations_fixed.csv contains the bounding boxes for the processed AIRS dataset, which is not loaded here due to size constraints. 
-The format of the file is `filename, min_x, min_y, max_x, max_y, class_name`.
+The goal of this portion of our framework is to detect buildings. The input is an RGB aerial image and the output is a list of building bounding boxes contains four coordinates, x,y of top left corner and x,y of the bottom right corner.

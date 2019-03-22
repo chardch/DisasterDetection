@@ -101,11 +101,11 @@ def parse_args(args):
     parser.add_argument('--convert-model',    help='Convert the model to an inference model (ie. the input is a training model).', action='store_true')
     parser.add_argument('--backbone',         help='The backbone of the model.', default='resnet50')
     parser.add_argument('--gpu',              help='Id of the GPU to use (as reported by nvidia-smi).')
-    parser.add_argument('--score-threshold',  help='Threshold on score to filter detections with (defaults to 0.05).', default=0.05, type=float)
-    parser.add_argument('--iou-threshold',    help='IoU Threshold to count for a positive detection (defaults to 0.5).', default=0.5, type=float)
-    parser.add_argument('--max-detections',   help='Max Detections per image (defaults to 100).', default=100, type=int)
+    parser.add_argument('--score-threshold',  help='Threshold on score to filter detections with (defaults to 0.05).', default=0.04, type=float)
+    parser.add_argument('--iou-threshold',    help='IoU Threshold to count for a positive detection (defaults to 0.5).', default=0.1, type=float)
+    parser.add_argument('--max-detections',   help='Max Detections per image (defaults to 100).', default=2000, type=int)
     parser.add_argument('--save-path',        help='Path for saving images with detections (doesn\'t work for COCO).')
-    parser.add_argument('--image-min-side',   help='Rescale the image so the smallest side is min_side.', type=int, default=800)
+    parser.add_argument('--image-min-side',   help='Rescale the image so the smallest side is min_side.', type=int, default=480)
     parser.add_argument('--image-max-side',   help='Rescale the image if the largest side is larger than max_side.', type=int, default=1333)
     parser.add_argument('--config',           help='Path to a configuration parameters .ini file (only used with --convert-model).')
 
@@ -181,7 +181,10 @@ def main(args=None):
             return
 
         print('mAP using the weighted average of precisions among classes: {:.4f}'.format(sum([a * b for a, b in zip(total_instances, precisions)]) / sum(total_instances)))
-        print('mAP: {:.4f}'.format(sum(precisions) / sum(x > 0 for x in total_instances)))
+        mAP = sum(precisions) / sum(x > 0 for x in total_instances)
+        with open('./mAP', 'a') as f:
+          f.write(str(mAP) + '\n')
+        print('mAP: {:.4f}'.format(mAP))
 
 
 if __name__ == '__main__':
